@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบแชร์แฟ้มสะสมผลงาน - คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
+  <style>
+    /* --- THEME SYSTEM: ROYAL BLUE & WHITE WITH DARK MODE INTEGRATION --- */
+    :root {
+      --primary-blue: #003399;      /* สีน้ำเงินหลัก ม.ว. */
+      --secondary-blue: #0055ff;    /* สีน้ำเงินสว่าง */
+      --accent-gradient: linear-gradient(135deg, #002277 0%, #0044cc 100%);
+      --bg-light: #f4f7fc;          /* พื้นหลังสว่าง */
+      --card-bg: #ffffff;           /* พื้นหลังกล่อง */
+      --text-main: #0b1a30;         /* ตัวหนังสือหลัก */
+      --text-muted: #64748b;        /* ตัวหนังสือรอง */
+      --border-color: rgba(0, 51, 153, 0.08);
+      --card-shadow: 0 8px 24px rgba(0, 51, 153, 0.04);
+      --hover-shadow: 0 16px 32px rgba(0, 85, 255, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* DARK MODE OVERRIDES */
+    [data-theme="dark"] {
+      --bg-light: #0b132b;
+      --card-bg: #1c2541;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      --hover-shadow: 0 16px 32px rgba(0, 85, 255, 0.2);
+      --primary-blue: #3a86ff;
+      --secondary-blue: #70a1ff;
+      --accent-gradient: linear-gradient(135deg, #1c2541 0%, #3a86ff 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Sarabun', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(0, 85, 255, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(0, 51, 153, 0.03) 0%, transparent 40%);
+      background-attachment: fixed;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* CINEMATIC LOADER — ตรงกับ design เว็บสภา */
+    #loader-wrapper {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-light);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s cubic-bezier(0.6, 0.05, 0.2, 1), visibility 0.8s;
+    }
+    body.loaded #loader-wrapper {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .loader-logo-img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      animation: iconFloat 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 16px rgba(0,102,255,0.18));
+    }
+    .loader-text {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-main);
+      margin-bottom: 28px;
+      opacity: 0.8;
+      animation: textPulse 2s ease-in-out infinite;
+      text-align: center;
+    }
+    .loading-bar-container {
+      width: 140px;
+      height: 3px;
+      background: rgba(0, 102, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    .loading-bar {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 50%;
+      background: var(--primary-blue);
+      border-radius: 10px;
+      animation: barSlide 1.5s ease-in-out infinite;
+      box-shadow: 0 0 10px var(--primary-blue);
+    }
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+    @keyframes textPulse {
+      0%, 100% { opacity: 0.55; }
+      50%       { opacity: 1; }
+    }
+    @keyframes barSlide {
+      0%   { left: -50%; width: 30%; }
+      50%  { width: 60%; }
+      100% { left: 100%; width: 30%; }
+    }
+
+    footer {
+      flex-shrink: 0; 
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 60px 40px 30px 40px;
+      width: 100%;
+    }
+
+    /* HEADER & NAVIGATION */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--card-shadow);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .brand img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+    }
+    .brand-title h1 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+    .brand-title p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .lang-switcher {
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .lang-switcher:hover {
+      border-color: var(--primary-blue);
+      color: var(--primary-blue);
+    }
+
+    /* CENTER HERO TEXT SECTION */
+    .hero-center-announce {
+      text-align: center;
+      max-width: 800px;
+      margin: 20px auto 25px auto;
+      padding: 0 10px;
+    }
+    .hero-center-announce h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .hero-center-announce p {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    @media(max-width: 600px) {
+      .hero-center-announce h2 { font-size: 1.7rem; }
+      .hero-center-announce p { font-size: 0.88rem; }
+    }
+
+    /* MINIMAL SEGMENTED TAB NAVIGATION */
+    .tab-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 25px auto;
+      max-width: 360px;
+      background: rgba(0, 51, 153, 0.05);
+      padding: 5px;
+      border-radius: 30px;
+    }
+    [data-theme="dark"] .tab-bar {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(0, 51, 153, 0.08);
+      font-weight: 600;
+    }
+
+    /* --- STYLES FOR SOCIAL ICONS IN FOOTER --- */
+    .footer-social-container { display: flex; gap: 16px; margin-top: 15px; }
+    .footer-social-icon {
+      width: 44px; height: 44px; border-radius: 50%; background: rgba(0, 102, 255, 0.05); border: var(--border);
+      color: var(--text-sec); display: flex; justify-content: center; align-items: center; font-size: 20px; text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .footer-social-icon:hover { color: #FFFFFF; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0, 102, 255, 0.2); }
+    .footer-social-icon.fb:hover { background: #1877F2; border-color: #1877F2; }
+    .footer-social-icon.ig:hover { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border-color: #dc2743; }
+    .footer-social-icon.tiktok:hover { background: #000000; border-color: #000000; }
+    .footer-social-icon.home:hover { background: #EA4335; border-color: #EA4335; }
+
+    /* FLOATING DARK/LIGHT MODE TOGGLER */
+    .theme-toggle-fab {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 48px;
+      height: 48px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--primary-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+      transition: var(--transition);
+    }
+    .theme-toggle-fab:hover {
+      transform: scale(1.08);
+      background: var(--primary-blue);
+      color: #ffffff;
+    }
+
+    /* APPLICATION CONTAINERS */
+    .app-page {
+      display: none;
+      max-width: 1200px;
+      margin: 0 auto 60px auto;
+      padding: 0 24px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .app-page.active-page {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SEARCH SYSTEM */
+    .gallery-filter-wrap {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+    }
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+    .search-box input {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px 12px 46px;
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--secondary-blue);
+      box-shadow: 0 0 15px rgba(0, 85, 255, 0.15);
+    }
+    .search-box span {
+      position: absolute;
+      left: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.25rem;
+    }
+
+    /* GALLERY CARDS GRID */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+      width: 100%;
+    }
+    @media(max-width: 400px) {
+      .grid-container { grid-template-columns: 1fr; }
+    }
+
+    .portfolio-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      display: flex;
+      height: 210px;
+      position: relative;
+      transition: var(--transition);
+    }
+    .portfolio-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 85, 255, 0.25);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .card-thumb-area {
+      width: 125px;
+      min-width: 125px;
+      height: 100%;
+      background: rgba(0, 51, 153, 0.03);
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border-color);
+    }
+    .card-thumb-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .portfolio-card:hover .card-thumb-area img {
+      transform: scale(1.05);
+    }
+
+    .card-badge {
+      position: absolute;
+      bottom: 8px; left: 8px; right: 8px;
+      background: rgba(0, 34, 119, 0.88);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      color: #ffffff;
+      padding: 4px;
+      border-radius: 10px;
+      font-size: 0.68rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-info {
+      padding: 14px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .card-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-uni {
+      font-size: 0.82rem;
+      color: var(--primary-blue);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .card-tags-area {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+    }
+    .tag-item span.icon {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .tag-text {
+      background: rgba(0, 51, 153, 0.04);
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    [data-theme="dark"] .tag-text { background: rgba(255, 255, 255, 0.05); }
+
+    .card-action-arrow {
+      align-self: flex-end;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    .portfolio-card:hover .card-action-arrow {
+      color: var(--primary-blue);
+      transform: translateX(2px);
+    }
+
+    /* FORM SUBMISSION UI STEPS */
+    .form-hero-panel {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+    .form-headline {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-headline h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 6px;
+    }
+    .form-headline p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .form-step-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: var(--card-shadow);
+    }
+    .step-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .step-number {
+      background: rgba(0, 85, 255, 0.1);
+      color: var(--primary-blue);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 0.85rem;
+    }
+    .step-heading h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .form-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+    .col-6 { grid-column: span 6; }
+    .col-3 { grid-column: span 3; }
+    .col-2 { grid-column: span 2; }
+    @media(max-width: 600px) {
+      .col-3, .col-2 { grid-column: span 6; }
+    }
+
+    .input-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-block label {
+      font-size: 0.82rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    .input-block label span.req { color: #ef4444; margin-left: 2px; }
+    
+    .input-field-container { position: relative; }
+    .input-field-container span.icon-prefix {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.15rem;
+    }
+    .input-field-container input, .input-field-container select, .input-field-container textarea {
+      width: 100%;
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      padding: 11px 14px 11px 42px;
+      border-radius: 10px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .input-field-container select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+    .input-field-container input:focus, .input-field-container select:focus, .input-field-container textarea:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      background: var(--card-bg);
+    }
+    .input-field-container textarea { padding: 12px 14px; resize: vertical; min-height: 80px; }
+
+    /* DROPZONE UPLOAD */
+    .file-dropzone-box {
+      border: 2px dashed var(--border-color);
+      border-radius: 14px;
+      padding: 25px 15px;
+      text-align: center;
+      background: var(--bg-light);
+      cursor: pointer;
+      position: relative;
+    }
+    .file-dropzone-box input[type="file"] {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+    }
+    .dropzone-icon { font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 10px; }
+    .dropzone-prompt h3 { font-size: 0.9rem; font-weight: 500; color: var(--text-main); }
+    .dropzone-prompt p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+    
+    .uploaded-file-capsule {
+      margin-top: 12px; display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0, 85, 255, 0.08); border: 1px solid rgba(0, 85, 255, 0.2);
+      padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; color: var(--primary-blue);
+    }
+    .preview-canvas-holder {
+      display: none; margin: 15px auto 0 auto; border-radius: 10px;
+      overflow: hidden; border: 1px solid var(--border-color); max-width: 130px;
+    }
+    .preview-canvas-holder canvas { width: 100%; display: block; }
+
+    /* CONSENT SCROLL TEXT BOX */
+    .legal-consent-box {
+      background: var(--bg-light);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 0.82rem;
+      color: var(--text-main);
+      line-height: 1.6;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 14px;
+      text-align: justify;
+    }
+    .legal-consent-box p { margin-bottom: 10px; }
+    .legal-consent-box p:last-child { margin-bottom: 0; }
+    
+    .policy-gate-checkbox { display: flex; align-items: flex-start; gap: 8px; }
+    .policy-gate-checkbox input { margin-top: 3px; accent-color: var(--primary-blue); width: 15px; height: 15px; cursor: pointer; }
+    .policy-gate-checkbox label { font-size: 0.82rem; color: var(--text-main); font-weight: 500; cursor: pointer; }
+
+    /* SUBMIT ACTION BUTTON */
+    .submit-action-btn {
+      width: 100%;
+      background: var(--accent-gradient);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 4px 12px rgba(0, 51, 153, 0.15);
+      transition: var(--transition);
+    }
+    .submit-action-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+
+    /* SYSTEM DETAILED PROFILE MODAL */
+    .system-modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 19, 43, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex; justify-content: center; align-items: center;
+      opacity: 0; visibility: hidden;
+      transition: var(--transition);
+      padding: 20px;
+    }
+    .system-modal-backdrop.open { opacity: 1; visibility: visible; }
+    
+    .modal-frame {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      width: 100%; max-width: 480px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      transform: scale(0.96);
+      transition: var(--transition);
+    }
+    .system-modal-backdrop.open .modal-frame { transform: scale(1); }
+    
+    .modal-hero-cover { background: var(--accent-gradient); position: relative; padding: 28px 20px; }
+    .modal-dismiss-trigger {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(255,255,255,0.15); border: none; color: #ffffff;
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-user-identity h2 { font-size: 1.25rem; font-weight: 600; color: #ffffff; }
+    .modal-user-identity p { font-size: 0.8rem; color: rgba(255,255,255,0.85); margin-top: 2px; }
+    
+    .modal-body-content { padding: 20px; }
+    .modal-academic-cards { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+    
+    .meta-academic-pill {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-light); padding: 8px 12px;
+      border-radius: 10px; border: 1px solid var(--border-color);
+    }
+    .meta-academic-pill span.icon { font-size: 1.2rem; color: var(--primary-blue); }
+    .pill-detail h4 { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 500; }
+    .pill-detail p { font-size: 0.88rem; color: var(--text-main); font-weight: 500; margin-top: 1px; }
+    
+    .modal-bio-section { margin-bottom: 16px; }
+    .modal-bio-section h4 { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+    .modal-bio-section p { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; background: var(--bg-light); padding: 10px 12px; border-radius: 10px; text-align: justify; }
+
+    .modal-social-links { display: flex; gap: 8px; margin-bottom: 16px; }
+    .modal-social-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 500; color: #ffffff; }
+    .modal-social-btn.fb { background: #1877f2; }
+    .modal-social-btn.ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+    
+    .modal-footer-btn {
+      width: 100%; background: var(--primary-blue); color: #ffffff; border: none; padding: 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(0, 51, 153, 0.1); transition: var(--transition);
+    }
+    .modal-footer-btn:hover { background: var(--secondary-blue); }
+
+    .empty-state { width: 100%; text-align: center; padding: 50px 20px; color: var(--text-muted); }
+    .empty-state span { font-size: 2.5rem; color: var(--text-muted); margin-bottom: 10px; display: block; }
+
+    footer {
+      flex-shrink: 0; 
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 60px 40px 30px 40px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader-wrapper">
+    <div class="loader-content">
+      <img src="https://drive.google.com/thumbnail?id=1sKtFgqq3E8DAzQ5SNLPlZAabaUoAJjpV&sz=w400" alt="Logo" class="loader-logo-img">
+      <div class="loader-text" id="loader-status-text">MAHAVAJIRAVUDH STUDENT</div>
+      <div class="loading-bar-container"><div class="loading-bar"></div></div>
+    </div>
+  </div>
+
+  <header>
+    <div class="brand">
+      <img src="https://drive.google.com/thumbnail?id=1sKtFgqq3E8DAzQ5SNLPlZAabaUoAJjpV&sz=w400" alt="School Logo">
+      <div class="brand-title">
+        <h1 id="txt-title">คลังแฟ้มสะสมผลงาน</h1>
+        <p id="txt-subtitle">คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</p>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <button class="lang-switcher" onclick="switchLanguage()" id="langBtn">EN</button>
+    </div>
+  </header>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchPage('gallery')" id="btn-nav-gallery">
+      <span class="material-symbols-rounded">grid_view</span>
+      <span id="lbl-nav-gallery">คลังพอร์ต</span>
+    </button>
+    <button class="tab-btn" onclick="switchPage('share')" id="btn-nav-share">
+      <span class="material-symbols-rounded">ios_share</span>
+      <span id="lbl-nav-share">แชร์ผลงาน</span>
+    </button>
+  </div>
+
+  <main id="page-gallery" class="app-page active-page">
+    <div class="hero-center-announce">
+      <h2 id="hero-title">คลังแฟ้มสะสมผลงาน</h2>
+      <p id="hero-subtitle">รวบรวมและแบ่งปัน Portfolio ของรุ่นพี่ ม.ว. เพื่อเป็นแรงบันดาลใจและแนวทางในการขับเคลื่อนอนาคตของรุ่นน้อง</p>
+    </div>
+    
+    <div class="gallery-filter-wrap">
+      <div class="search-box">
+        <span class="material-symbols-rounded">search</span>
+        <input type="text" id="gallerySearch" oninput="filterPortfolios()" placeholder="ค้นหาตาม คณะ, สาขา, มหาวิทยาลัย...">
+      </div>
+    </div>
+
+    <div id="galleryGrid" class="grid-container"></div>
+  </main>
+
+  <section id="page-share" class="app-page">
+    <div class="form-hero-panel">
+      <div class="form-headline">
+        <h2 id="form-title">ร่วมแบ่งปัน Portfolio ของคุณ</h2>
+        <p id="form-desc">กรอกข้อมูลประวัติการสอบเข้าศึกษาต่อเพื่อร่วมเป็นแรงบันดาลใจและแนวทางให้รุ่นน้อง</p>
+      </div>
+
+      <form id="portfolioForm" onsubmit="handleFormSubmit(event)">
+        <div class="form-step-section">
+          <div class="step-heading">
+            <div class="step-number">1</div>
+            <h3 id="step-lbl-1">ข้อมูลส่วนตัว</h3>
+          </div>
+          <div class="form-grid-layout">
+            <div class="input-block col-2">
+              <label for="input-prefix" id="lbl-prefix">คำนำหน้า<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">demography</span>
+                <select id="input-prefix" required>
+                  <option value="นาย">นาย</option>
+                  <option value="นาง">นาง</option>
+                  <option value="นางสาว">นางสาว</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-block col-2">
+              <label for="input-firstname" id="lbl-firstname">ชื่อจริง (ภาษาไทย)<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">person</span>
+                <input type="text" id="input-firstname" required placeholder="สมชาย">
+              </div>
+            </div>
+            <div class="input-block col-2">
+              <label for="input-lastname" id="lbl-lastname">นามสกุล (ภาษาไทย)<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">badge</span>
+                <input type="text" id="input-lastname" required placeholder="สายชล">
+              </div>
+            </div>
+            <div class="input-block col-2">
+              <label for="input-nickname" id="lbl-nickname">ชื่อเล่น<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">chat_bubble</span>
+                <input type="text" id="input-nickname" required placeholder="บอย">
+              </div>
+            </div>
+            <div class="input-block col-2">
+              <label for="input-class" id="lbl-class">ปีการศึกษาที่จบ<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">calendar_today</span>
+                <select id="input-class" required>
+                </select>
+              </div>
+            </div>
+            <div class="input-block col-2">
+              <label for="input-program" id="lbl-program">แผนการเรียน<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">menu_book</span>
+                <select id="input-program" required>
+                  <option value="วิทยาศาสตร์ - คณิตศาสตร์">วิทยาศาสตร์ - คณิตศาสตร์</option>
+                  <option value="Competency Academic Program : CAP">Competency Academic Program : CAP</option>
+                  <option value="Enrichment Program of Science, Mathematics, Technology and Environment : SMTE">Enrichment Program of Science, Mathematics, Technology and Environment : SMTE</option>
+                  <option value="SMA Pre-medical">SMA Pre-medical</option>
+                  <option value="Science Math Ability : SMA">Science Math Ability : SMA</option>
+                  <option value="ศิลป์ - คำนวณ">ศิลป์ - คำนวณ</option>
+                  <option value="ศิลป์ - ภาษา">ศิลป์ - ภาษา</option>
+                  <option value="English Gifted Learners : EGL">English Gifted Learners : EGL</option>
+                  <option value="Law and Political Program : LP">Law and Political Program : LP</option>
+                  <option value="ไทย - สังคม">ไทย - สังคม</option>
+                  <option value="Music Program">Music Program</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step-section">
+          <div class="step-heading">
+            <div class="step-number">2</div>
+            <h3 id="step-lbl-2">ข้อมูลการศึกษา</h3>
+          </div>
+          <div class="form-grid-layout">
+            <div class="input-block col-6">
+              <label for="input-round" id="lbl-round">รอบการยื่นสมัคร<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">layers</span>
+                <select id="input-round" required>
+                  <option value="รอบที่ 1 Portfolio">รอบที่ 1 Portfolio</option>
+                  <option value="รอบที่ 2 Quota">รอบที่ 2 Quota</option>
+                  <option value="รอบที่ 3 Admission">รอบที่ 3 Admission</option>
+                  <option value="รอบที่ 4 Direct Admission">รอบที่ 4 Direct Admission</option>
+                </select>
+              </div>
+            </div>
+            <div class="input-block col-6">
+              <label for="input-faculty" id="lbl-input-faculty">คณะที่เข้าศึกษา<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">account_balance</span>
+                <input type="text" id="input-faculty" required placeholder="เช่น คณะวิศวกรรมศาสตร์">
+              </div>
+            </div>
+            <div class="input-block col-6">
+              <label for="input-major" id="lbl-input-major">สาขาวิชาที่เข้าศึกษา<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">architecture</span>
+                <input type="text" id="input-major" required placeholder="เช่น สาขาวิศวกรรมคอมพิวเตอร์">
+              </div>
+            </div>
+            <div class="input-block col-6">
+              <label for="input-uni" id="lbl-input-uni">มหาวิทยาลัย<span class="req">*</span></label>
+              <div class="input-field-container">
+                <span class="material-symbols-rounded icon-prefix">school</span>
+                <input type="text" id="input-uni" required placeholder="เช่น มหาวิทยาลัยสงขลานครินทร์">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step-section">
+          <div class="step-heading">
+            <div class="step-number">3</div>
+            <h3 id="step-lbl-3">อัปโหลดไฟล์ Portfolio & ช่องทางติดต่อ</h3>
+          </div>
+          <div class="form-grid-layout">
+            <div class="input-block col-6">
+              <label id="lbl-input-file">ช่องสำหรับอัปโหลดไฟล์ (จำกัดเฉพาะไฟล์ PDF เท่านั้น)<span class="req">*</span></label>
+              <div class="file-dropzone-box">
+                <span class="material-symbols-rounded dropzone-icon">picture_as_pdf</span>
+                <div class="dropzone-prompt">
+                  <h3 id="txt-drop-title">คลิกหรือลากวางไฟล์ PDF ที่นี่</h3>
+                  <p id="txt-drop-subtitle">ขนาดไฟล์แนะนำไม่เกิน 20MB</p>
+                </div>
+                <input type="file" id="input-file" accept="application/pdf" required onchange="handleFileProcessing(event)">
+                <div class="uploaded-file-capsule" id="fileStatusCapsule" style="display:none;">
+                  <span class="material-symbols-rounded">task_alt</span>
+                  <b id="statusFileName">portfolio.pdf</b>
+                </div>
+              </div>
+              <div class="preview-canvas-holder" id="pdfPreviewFrame">
+                <canvas id="pdfRenderCanvas"></canvas>
+              </div>
+            </div>
+            
+            <div class="input-block col-3">
+              <label for="input-facebook" id="lbl-fb">Facebook URL <span id="fb-ig-cond" style="color:var(--primary-blue); font-size:0.75rem;">(กรอกอย่างใดอย่างหนึ่ง*)</span></label>
+              <div class="input-field-container">
+                <span class="fab fa-facebook-f icon-prefix" style="padding-left:4px;"></span>
+                <input type="url" id="input-facebook" placeholder="https://facebook.com/username">
+              </div>
+            </div>
+            <div class="input-block col-3">
+              <label for="input-instagram" id="lbl-ig">Instagram URL</label>
+              <div class="input-field-container">
+                <span class="fab fa-instagram icon-prefix" style="padding-left:2px;"></span>
+                <input type="url" id="input-instagram" placeholder="https://instagram.com/username">
+              </div>
+            </div>
+            <div class="input-block col-6">
+              <label for="input-bio" id="lbl-bio">สิ่งที่อยากจะบอกน้อง</label>
+              <div class="input-field-container">
+                <textarea id="input-bio" placeholder="เขียนเล่าแชร์ประสบการณ์ ทริคการเตรียมตัวสั้นๆ เป็นวิทยาทานแก่น้องๆ..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-step-section">
+          <div class="step-heading">
+            <div class="step-number">4</div>
+            <h3 id="step-lbl-4">ยินยอมการเปิดเผยข้อมูล</h3>
+          </div>
+          <div class="legal-consent-box">
+            <p>ข้าพเจ้ายินยอมในการมอบแฟ้มสะสมผลงาน (Portfolio) ของข้าพเจ้าให้แก่ <strong style="color:var(--primary-blue);">คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</strong> เพื่อใช้เป็นสื่อประกอบการเรียนรู้ แนะแนว และส่งเสริมการพัฒนาแฟ้มสะสมผลงานของนักเรียนในรุ่นถัดไป</p>
+            <p>ข้าพเจ้ายินยอมให้มีการเปิดเผยเนื้อหาในแฟ้มสะสมผลงานดังกล่าวต่อบุคลากรทางการศึกษา นักเรียน หรือผู้ที่เกี่ยวข้อง ผ่านช่องทางภายในของโรงเรียน รวมถึงสื่อสิ่งพิมพ์หรือสื่ออิเล็กทรอนิกส์ของโรงเรียน เช่น เว็บไซต์หรือโซเชียลมีเดีย เพื่อประโยชน์ทางการศึกษาเท่านั้น โดยไม่มีวัตถุประสงค์ในเชิงพาณิชย์</p>
+            <p>ทั้งนี้ ข้าพเจ้าได้ดำเนินการลบหรือปิดบังข้อมูลส่วนบุคคล เช่น เลขประจำตัวประชาชน เบอร์โทรศัพท์ อีเมล ที่อยู่ และข้อมูลอื่นใดที่สามารถระบุตัวบุคคลได้ ออกจากแฟ้มสะสมผลงานแล้ว เพื่อคุ้มครองสิทธิความเป็นส่วนตัวของข้าพเจ้าและบุคคลที่เกี่ยวข้อง</p>
+            <p>ข้าพเจ้ายังคงสงวนสิทธิ์ความเป็นเจ้าของผลงานตามกฎหมาย และขอความอนุเคราะห์ให้มีการระบุชื่อข้าพเจ้าเป็นเจ้าของผลงานอย่างเหมาะสม ทุกครั้งที่มีการเผยแพร่หรือใช้อ้างอิง</p>
+          </div>
+          <div class="policy-gate-checkbox">
+            <input type="checkbox" id="policyAgreement">
+            <label for="policyAgreement" id="lbl-policy">ฉันได้อ่านข้อกำหนดด้านบนทั้งหมดและยืนยันยินยอมมอบสิทธิ์ความเป็นส่วนตัวตามข้อตกลง</label>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-action-btn" id="submitBtn" disabled>
+          <span class="material-symbols-rounded">cloud_upload</span>
+          <span id="lbl-submit-btn">ส่งข้อมูลแชร์พอร์ต</span>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <div class="system-modal-backdrop" id="profileModal" onclick="closeModalGate(event)">
+    <div class="modal-frame">
+      <div class="modal-hero-cover" style="padding:0; position:relative; overflow:hidden;">
+        <!-- รูปปกพอร์ต -->
+        <img id="md-thumbnail" src="https://images.unsplash.com/photo-1626908013351-800ddd734b8a?w=480&q=80" 
+             alt="Portfolio Cover" 
+             style="width:100%; height:160px; object-fit:cover; display:block;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(0,20,80,0.85) 0%, rgba(0,20,80,0.2) 60%, transparent 100%);"></div>
+        <button class="modal-dismiss-trigger" onclick="toggleModal(false)" style="position:absolute;top:12px;right:12px;">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+        <div class="modal-user-identity" style="position:absolute;bottom:16px;left:20px;right:20px;">
+          <h2 id="md-name">สมชาย สายชล (บอย)</h2>
+          <p id="md-class">ปีการศึกษาที่จบ: 2569</p>
+        </div>
+      </div>
+      
+      <div class="modal-body-content">
+        <div class="modal-academic-cards">
+          <div class="meta-academic-pill">
+            <span class="material-symbols-rounded icon">menu_book</span>
+            <div class="pill-detail">
+              <h4 id="md-lbl-program">แผนการเรียน</h4>
+              <p id="md-program">วิทยาศาสตร์ - คณิตศาสตร์</p>
+            </div>
+          </div>
+          <div class="meta-academic-pill">
+            <span class="material-symbols-rounded icon">layers</span>
+            <div class="pill-detail">
+              <h4 id="md-lbl-round">รอบการยื่นสมัคร</h4>
+              <p id="md-round">รอบที่ 1 Portfolio</p>
+            </div>
+          </div>
+          <div class="meta-academic-pill">
+            <span class="material-symbols-rounded icon">account_balance</span>
+            <div class="pill-detail">
+              <h4 id="md-lbl-fac">คณะที่ติด</h4>
+              <p id="md-faculty">คณะวิศวกรรมศาสตร์</p>
+            </div>
+          </div>
+          <div class="meta-academic-pill">
+            <span class="material-symbols-rounded icon">architecture</span>
+            <div class="pill-detail">
+              <h4 id="md-lbl-maj">สาขาวิชาที่เข้าศึกษา</h4>
+              <p id="md-major">สาขาวิศวกรรมคอมพิวเตอร์</p>
+            </div>
+          </div>
+          <div class="meta-academic-pill">
+            <span class="material-symbols-rounded icon">school</span>
+            <div class="pill-detail">
+              <h4 id="md-lbl-uni">สถาบันอุดมศึกษา</h4>
+              <p id="md-university">มหาวิทยาลัยสงขลานครินทร์</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-bio-section">
+          <h4 id="md-lbl-bio">สิ่งที่พี่อยากจะบอกน้อง:</h4>
+          <p id="md-bio">สู้ๆ ครับน้องๆ การเตรียมตัวดีมีชัยไปกว่าครึ่ง เน้นเก็บผลงานที่ตรงกับเกณฑ์ของคณะนะ!</p>
+        </div>
+
+        <div class="modal-social-links" id="modalSocialSection"></div>
+
+        <a href="#" target="_blank" class="modal-footer-btn" id="modalActionLink">
+          <span class="material-symbols-rounded">picture_as_pdf</span>
+          <span id="md-btn-txt">เปิดดูไฟล์ Portfolio</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <button class="theme-toggle-fab" onclick="toggleThemeMode()" title="Switch Light/Dark Mode">
+    <span class="material-symbols-rounded" id="theme-icon">dark_mode</span>
+  </button>
+
+  <!-- FOOTER -->
+  <footer style="background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: var(--border); padding: 40px 40px 24px 40px; margin-top: auto; color: var(--text-main);">
+    <div style="max-width: 100%; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; align-items: center;">
+      <div style="flex: 1; min-width: 250px;">
+        <h3 id="f-main-title" style="font-size: 16px; font-weight: 500; margin-bottom: 12px; color: var(--accent);">คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</h3>
+        <p style="font-size: 14px; color: var(--text-sec); line-height: 1.6;">
+          <strong id="f-addr-title">โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</strong><br>
+          <span id="f-addr-detail">ถนนราชดำเนิน ตำบลบ่อยาง อำเภอเมืองสงขลา จังหวัดสงขลา 90000</span>
+        </p>
+      </div>
+      <div>
+        <h3 id="f-links-title" style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">ช่องทางติดต่อ</h3>
+        
+        <div class="footer-social-container">
+          <a href="https://www.facebook.com/scmvsk" target="_blank" class="footer-social-icon fb" title="Facebook คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+          <a href="https://www.instagram.com/mvsc.official" target="_blank" class="footer-social-icon ig" title="Instagram mvsc.official">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://www.tiktok.com/@vajiraview?" target="_blank" class="footer-social-icon tiktok" title="TikTok vajiraview.official">
+            <i class="fa-brands fa-tiktok"></i>
+          </a>
+          <a href="https://script.google.com/macros/s/AKfycbzAL459_sQSBQUBB2HdGuVLU_9KHiat-u9_4lBxSETmQZolWozrIDXoqTPsqugcjuQ6nA/exec" class="footer-social-icon home" title="Home">
+            <i class="fa-solid fa-house"></i>
+          </a>
+        </div>
+        
+        <div style="margin-top: 14px;">
+          <a id="f-link-web" href="https://www.mvsk.ac.th" target="_blank" style="font-size: 13px; color: var(--text-sec); text-decoration: none; opacity: 0.8;">🌐 เว็บไซต์โรงเรียนมหาวชิราวุธ จังหวัดสงขลา</a>
+        </div>
+      </div>
+    </div>
+    <div style="max-width: 100%; margin: 30px auto 0 auto; padding-top: 20px; border-top: var(--border); text-align: center; font-size: 12px; color: var(--text-sec);">
+      &copy; 2026 Mahavajiravudh Songkhla Student Committee. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // CORE ARCHITECTURE SYSTEM - APPS SCRIPT DATABASE ENDPOINT
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylC_Vm_PlaFgICG-Fy2PlOwlc7cQ0mzobe_jkcy6kleuJ6Z4oSnB7ObR52k5KnyiM-/exec";
+    let currentLang = 'th';
+    let localRepository = [];
+    let currentThumbnail = "";
+
+    const dictionary = {
+      th: {
+        title: "คลังแฟ้มสะสมผลงาน",
+        subtitle: "โรงเรียนมหาวชิราวุธ จังหวัดสงขลา",
+        heroTitle: "คลังแฟ้มสะสมผลงาน",
+        heroSubtitle: "รวบรวมและแบ่งปัน Portfolio ของรุ่นพี่ ม.ว. เพื่อเป็นแรงบันดาลใจและแนวทางในการขับเคลื่อนอนาคตของรุ่นน้อง",
+        navGallery: "คลังพอร์ต",
+        navShare: "แชร์ผลงาน",
+        searchPlaceholder: "ค้นหาตาม คณะ, สาขา, มหาวิทยาลัย...",
+        formTitle: "ร่วมแบ่งปัน Portfolio ของคุณ",
+        formDesc: "กรอกข้อมูลประวัติการสอบเข้าศึกษาต่อเพื่อร่วมเป็นแรงบันดาลใจและแนวทางให้รุ่นน้อง",
+        step1: "ข้อมูลส่วนตัว",
+        step2: "ข้อมูลการศึกษา",
+        step3: "อัปโหลดไฟล์ Portfolio & ช่องทางติดต่อ",
+        step4: "ยินยอมการเปิดเผยข้อมูล",
+        lblPrefix: "คำนำหน้า",
+        lblFirstname: "ชื่อจริง (ภาษาไทย)",
+        lblLastname: "นามสกุล (ภาษาไทย)",
+        lblNickname: "ชื่อเล่น",
+        lblClass: "ปีการศึกษาที่จบ",
+        lblProgram: "แผนการเรียน",
+        lblRound: "รอบการยื่นสมัคร",
+        lblFaculty: "คณะที่เข้าศึกษา",
+        lblMajor: "สาขาวิชาที่เข้าศึกษา",
+        lblUni: "มหาวิทยาลัย",
+        lblFile: "ช่องสำหรับอัปโหลดไฟล์ (จำกัดเฉพาะไฟล์ PDF เท่านั้น)",
+        dropTitle: "คลิกหรือลากวางไฟล์ PDF ที่นี่",
+        dropSubtitle: "ขนาดไฟล์แนะนำไม่เกิน 20MB",
+        lblBio: "สิ่งที่อยากจะบอกน้อง",
+        policy: "ฉันได้อ่านข้อกำหนดด้านบนทั้งหมดและยืนยันยินยอมมอบสิทธิ์ความเป็นส่วนตัวตามข้อตกลง",
+        submitBtn: "ส่งข้อมูลแชร์พอร์ต",
+        loaderInit: "MAHAVAJIRAVUDH STUDENT COMMITTEE",
+        loaderSending: "กำลังบันทึกและอัปโหลดข้อมูลคลาวด์...",
+        mdLblProgram: "แผนการเรียน",
+        mdLblRound: "รอบการยื่นสมัคร",
+        mdLblFac: "คณะที่ติด",
+        mdLblMaj: "สาขาวิชาที่เข้าศึกษา",
+        mdLblUni: "สถาบันอุดมศึกษา",
+        mdLblBio: "สิ่งที่พี่อยากจะบอกน้อง:",
+        mdBtnTxt: "เปิดดูไฟล์ Portfolio",
+        mdClassPrefix: "ปีการศึกษาที่จบ: ",
+        condLabel: "(กรอกอย่างใดอย่างหนึ่ง*)",
+        lblFb: "Facebook URL",
+        lblIg: "Instagram URL",
+        alertFileRequired: "กรุณาอัปโหลดหรือเลือกไฟล์ Portfolio (PDF) ก่อนส่งข้อมูลครับ",
+        alertSuccess: "🎉 ส่งข้อมูลและอัปโหลดแฟ้มสะสมผลงานสำเร็จ ขอบคุณที่แบ่งปันผลงานครับ!",
+        alertErrNetwork: "ไม่สามารถส่งข้อมูลได้ชั่วคราว กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือสิทธิ์ใน Google Apps Script",
+        emptyTxt: "ยังไม่มีข้อมูลแฟ้มสะสมผลงานในคลังระบบ" ,
+        fMainTitle: "คณะกรรมการนักเรียน โรงเรียนมหาวชิราวุธ จังหวัดสงขลา",
+        fAddrTitle: "โรงเรียนมหาวชิราวุธ จังหวัดสงขลา",
+        fAddrDetail: "ถนนราชดำเนิน ตำบลบ่อยาง อำเภอเมืองสงขลา จังหวัดสงขลา 90000",
+        fLinksTitle: "ช่องทางติดต่อ",
+        fLinkWeb: "🌐 เว็บไซต์โรงเรียนมหาวชิราวุธ จังหวัดสงขลา"
+      },
+      en: {
+        title: "Digital Portfolio Hub",
+        subtitle: "Maha Vajiravudh Songkhla School",
+        heroTitle: "Digital Portfolio Hub",
+        heroSubtitle: "Discover and explore curated portfolios from alumni to drive next-generation student academic success.",
+        navGallery: "Gallery",
+        navShare: "Share Port",
+        searchPlaceholder: "Search by faculty, major, university...",
+        formTitle: "Share Your Academic Portfolio",
+        formDesc: "Provide your successful educational tracking data to empower junior students.",
+        step1: "Personal Information",
+        step2: "Educational Record",
+        step3: "Portfolio File Upload & Contact Links",
+        step4: "Consent & Privacy Policy",
+        lblPrefix: "Prefix",
+        lblFirstname: "Firstname (Thai)",
+        lblLastname: "Lastname (Thai)",
+        lblNickname: "Nickname",
+        lblClass: "Graduation Year",
+        lblProgram: "Academic Program",
+        lblRound: "Admission Round",
+        lblFaculty: "Faculty",
+        lblMajor: "Major",
+        lblUni: "University",
+        lblFile: "Upload Portfolio File (PDF Only)",
+        dropTitle: "Click or Drag & Drop PDF Portfolio Here",
+        dropSubtitle: "Recommended file size less than 20MB",
+        lblBio: "Message for Juniors",
+        policy: "I have read all privacy agreements and explicitly consent to showcase my dataset.",
+        submitBtn: "Submit and Sync Portfolio",
+        loaderInit: "Syncing Portfolio Hub Data...",
+        loaderSending: "Uploading Document Assets to Cloud Infrastructure...",
+        mdLblProgram: "Academic Program",
+        mdLblRound: "Admission Round",
+        mdLblFac: "Admitted Faculty",
+        mdLblMaj: "Major Field",
+        mdLblUni: "Institution University",
+        mdLblBio: "Alumni Message Note:",
+        mdBtnTxt: "View PDF Portfolio Document",
+        mdClassPrefix: "Graduation Class: ",
+        condLabel: "(Provide at least one*)",
+        lblFb: "Facebook URL",
+        lblIg: "Instagram URL",
+        alertFileRequired: "Please upload or assign a valid PDF document asset prior to submitting application.",
+        alertSuccess: "🎉 Synced successfully! Thank you for your digital learning portfolio contribution.",
+        alertErrNetwork: "Failed to establish cloud sync. Check connection infrastructure or Google Apps Script Web App Deployment Settings.",
+        emptyTxt: "No digital portfolio record discovered inside repository.",
+        fMainTitle: "Mahavajiravudh Songkhla School Student Committee",
+        fAddrTitle: "Mahavajiravudh Songkhla School",
+        fAddrDetail: "Ratchadamnoen Road, Bo Yang, Mueang Songkhla, Songkhla 90000",
+        fLinksTitle: "Contact Us",
+        fLinkWeb: "🌐 Mahavajiravudh Songkhla School Website"
+      }
+    };
+
+    // INIT INITIAL OPERATIONS & PERSISTED SYSTEM THEME
+    document.addEventListener("DOMContentLoaded", function() {
+      // โหมดสว่างเป็นค่าเริ่มต้น (ข้อ 4)
+      let savedTheme = 'light';
+      try { savedTheme = localStorage.getItem('site-portfolio-theme') || 'light'; } catch(e) {}
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('theme-icon').innerText = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
+
+      // สร้างตัวเลือกปีพุทธศักราชอัตโนมัติ (ข้อ 2)
+      // ปีพุทธศักราช = ปีคริสต์ + 543
+      const currentBE = new Date().getFullYear() + 543;
+      const startBE = currentBE - 10; // ย้อนหลัง 10 ปี
+      const classSelect = document.getElementById('input-class');
+      for (let year = currentBE; year >= startBE; year--) {
+        const opt = document.createElement('option');
+        opt.value = year;
+        opt.textContent = year;
+        classSelect.appendChild(opt);
+      }
+
+      fetchPortfolios();
+
+      // Event listeners for form validation
+      const submitBtn = document.getElementById('submitBtn');
+      if (submitBtn) submitBtn.disabled = true;
+      const fbInput = document.getElementById('input-facebook');
+      const igInput = document.getElementById('input-instagram');
+      const policyCheck = document.getElementById('policyAgreement');
+      if (fbInput) fbInput.addEventListener('input', validateContactRequirements);
+      if (igInput) igInput.addEventListener('input', validateContactRequirements);
+      if (policyCheck) policyCheck.addEventListener('change', validateContactRequirements);
+    });
+
+    // DYNAMIC LIGHT / DARK SYSTEM TOGGLER
+    function toggleThemeMode() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      let targetTheme = 'light';
+      if (currentTheme === 'light') {
+        targetTheme = 'dark';
+        document.getElementById('theme-icon').innerText = 'light_mode';
+      } else {
+        document.getElementById('theme-icon').innerText = 'dark_mode';
+      }
+      document.documentElement.setAttribute('data-theme', targetTheme);
+      try { localStorage.setItem('site-portfolio-theme', targetTheme); } catch(e) {}
+    }
+
+    // FETCH PORTFOLIOS FROM BACKEND
+    function fetchPortfolios() {
+      document.body.classList.remove('loaded');
+      document.getElementById('loader-status-text').innerText = dictionary[currentLang].loaderInit;
+
+      fetch(SCRIPT_URL)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          localRepository = data;
+          renderGalleryGrid(localRepository);
+          document.body.classList.add('loaded');
+        })
+        .catch(function(err) {
+          console.error("Database sync malfunction:", err);
+          renderGalleryGrid([]);
+          document.body.classList.add('loaded');
+        });
+    }
+
+    // RENDER CARDS GRID SYSTEM
+    function renderGalleryGrid(items) {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '';
+      
+      if (!items || items.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.className = 'empty-state';
+        emptyState.innerHTML = `
+          <span class="material-symbols-rounded">folder_open</span>
+          <p>${dictionary[currentLang].emptyTxt}</p>
+        `;
+        grid.appendChild(emptyState);
+        return;
+      }
+
+      items.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'portfolio-card';
+        card.onclick = () => launchDetailedProfileModal(item);
+
+        const prefix = item.prefix || '';
+        const fname = item.firstname || '';
+        const lname = item.lastname || '';
+        const nname = item.nickname ? ` (${item.nickname})` : '';
+        const displayName = `${prefix}${fname} ${lname}${nname}`.trim() || 'ไม่ระบุชื่อ';
+        
+        const fallbackThumb = 'https://images.unsplash.com/photo-1626908013351-800ddd734b8a?w=400&q=80';
+        let thumbnailSrc = fallbackThumb;
+        const _tv = String(item.thumbnail || '').trim();
+        if (_tv.startsWith('http')) {
+          thumbnailSrc = _tv;                              // Drive URL ใช้ตรง
+        } else if (_tv.startsWith('data:')) {
+          thumbnailSrc = _tv;                              // data URL ใช้ตรง
+        } else if (_tv.length > 100) {
+          thumbnailSrc = 'data:image/jpeg;base64,' + _tv; // raw base64
+        }
+        // รองรับทั้ง year (จาก doGet) และ class (ข้อมูลเก่า)
+        const classYear = item.year || item.class || '';
+        const roundText = item.round ? ` | ${item.round}` : '';
+        // รองรับทั้ง univ (จาก doGet) และ university
+        const uniName = item.univ || item.university || '-';
+        // รองรับทั้ง track (จาก doGet) และ program
+        const programName = item.track || item.program || '-';
+
+        card.innerHTML = `
+          <div class="card-thumb-area">
+            <img src="${thumbnailSrc}" alt="Portfolio Thumbnail" onerror="this.src='${fallbackThumb}'">
+            <div class="card-badge">${classYear}${roundText}</div>
+          </div>
+          <div class="card-info">
+            <div>
+              <div class="card-name">${displayName}</div>
+              <div class="card-uni">
+                <span class="material-symbols-rounded" style="font-size:0.95rem;">school</span>
+                <span>${uniName}</span>
+              </div>
+              <div class="card-tags-area">
+                <div class="tag-item">
+                  <span class="material-symbols-rounded icon">menu_book</span>
+                  <div class="tag-text">${programName}</div>
+                </div>
+                <div class="tag-item">
+                  <span class="material-symbols-rounded icon">account_balance</span>
+                  <div class="tag-text">${item.faculty || '-'}</div>
+                </div>
+                <div class="tag-item">
+                  <span class="material-symbols-rounded icon">architecture</span>
+                  <div class="tag-text">${item.major || '-'}</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-action-arrow">
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // SEARCH FILTER
+    function filterPortfolios() {
+      const q = document.getElementById('gallerySearch').value.toLowerCase().trim();
+      if (!q) {
+        renderGalleryGrid(localRepository);
+        return;
+      }
+      const filtered = localRepository.filter(item => {
+        const fac = (item.faculty || '').toLowerCase();
+        const maj = (item.major || '').toLowerCase();
+        const uni = (item.univ || item.university || '').toLowerCase();
+        const fname = (item.firstname || '').toLowerCase();
+        const lname = (item.lastname || '').toLowerCase();
+        const prog = (item.track || item.program || '').toLowerCase();
+        return fac.includes(q) || maj.includes(q) || uni.includes(q) || fname.includes(q) || lname.includes(q) || prog.includes(q);
+      });
+      renderGalleryGrid(filtered);
+    }
+
+    // TABS SYSTEM SWITCHER
+    function switchPage(pageKey) {
+      const pages = document.querySelectorAll('.app-page');
+      const tabs = document.querySelectorAll('.tab-btn');
+      
+      pages.forEach(p => p.classList.remove('active-page'));
+      tabs.forEach(b => b.classList.remove('active'));
+
+      if (pageKey === 'gallery') {
+        document.getElementById('page-gallery').classList.add('active-page');
+        document.getElementById('btn-nav-gallery').classList.add('active');
+      } else {
+        document.getElementById('page-share').classList.add('active-page');
+        document.getElementById('btn-nav-share').classList.add('active');
+      }
+    }
+
+    // ==========================================
+    // รื้อระบบและปรับปรุงส่วนควบคุมการส่งพอร์ตใหม่
+    // ==========================================
+
+    // PDF FILE PROCESSING: แสดง thumbnail หน้าแรกและบันทึก base64 ภาพหน้าปก
+    async function handleFileProcessing(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // แสดงชื่อไฟล์ใน capsule
+      document.getElementById('statusFileName').innerText = file.name;
+      document.getElementById('fileStatusCapsule').style.display = 'inline-flex';
+
+      // render หน้าแรกของ PDF ด้วย pdf.js แล้วเก็บเป็น thumbnail base64
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const page = await pdfDoc.getPage(1);
+
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.getElementById('pdfRenderCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        // แสดง preview
+        document.getElementById('pdfPreviewFrame').style.display = 'block';
+
+        // เก็บ thumbnail เป็น base64 (ตัด "data:image/png;base64," ออก)
+        currentThumbnail = canvas.toDataURL('image/jpeg', 0.7).split(',')[1];
+      } catch (err) {
+        console.error('PDF preview error:', err);
+        // ถ้า render ไม่ได้ก็ไม่ต้องแสดง preview แต่ยังอัปโหลดได้ปกติ
+        currentThumbnail = "";
+        document.getElementById('pdfPreviewFrame').style.display = 'none';
+      }
+    }
+
+    // RESET DROPZONE: คืนสถานะ dropzone กลับเป็นค่าเริ่มต้น
+    function resetDropzone() {
+      document.getElementById('input-file').value = '';
+      document.getElementById('fileStatusCapsule').style.display = 'none';
+      document.getElementById('statusFileName').innerText = 'portfolio.pdf';
+      document.getElementById('pdfPreviewFrame').style.display = 'none';
+      const canvas = document.getElementById('pdfRenderCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      currentThumbnail = "";
+    }
+
+    // VALIDATE INPUTS FOR INTERACTIVE BUTTON ACTIVATION
+    function validateContactRequirements() {
+      const fbVal = document.getElementById('input-facebook').value.trim();
+      const igVal = document.getElementById('input-instagram').value.trim();
+      const policyChecked = document.getElementById('policyAgreement').checked;
+      const submitBtn = document.getElementById('submitBtn');
+
+      // เงื่อนไข: ต้องกรอก Facebook หรือ Instagram อย่างใดอย่างหนึ่ง + ต้องกดเลือกยินยอมนโยบาย
+      if ((fbVal !== "" || igVal !== "") && policyChecked) {
+        submitBtn.disabled = false;
+      } else {
+        submitBtn.disabled = true;
+      }
+    }
+
+    // POST SUBMISSION FORM TO GOOGLE APPS SCRIPT CLOUD HOOK
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('input-file');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert(dictionary[currentLang].alertFileRequired);
+        return;
+      }
+
+      document.getElementById('loader-wrapper').style.display = 'flex';
+      document.body.classList.remove('loaded');
+      document.getElementById('loader-status-text').innerText = dictionary[currentLang].loaderSending;
+
+      const fileReader = new FileReader();
+      fileReader.onload = function(event) {
+        const fileBase64 = event.target.result.split(',')[1];
+
+        const payload = {
+          prefix:         document.getElementById('input-prefix').value,
+          firstname:      document.getElementById('input-firstname').value.trim(),
+          lastname:       document.getElementById('input-lastname').value.trim(),
+          nickname:       document.getElementById('input-nickname').value.trim(),
+          class:          document.getElementById('input-class').value,
+          track:          document.getElementById('input-program').value,
+          round:          document.getElementById('input-round').value,
+          faculty:        document.getElementById('input-faculty').value.trim(),
+          major:          document.getElementById('input-major').value.trim(),
+          university:     document.getElementById('input-uni').value.trim(),
+          facebook:       document.getElementById('input-facebook').value.trim(),
+          instagram:      document.getElementById('input-instagram').value.trim(),
+          bio:            document.getElementById('input-bio').value.trim(),
+          fileData:       'data:application/pdf;base64,' + fileBase64,
+          fileName:       file.name,
+          thumbnail:      currentThumbnail ? ('data:image/jpeg;base64,' + currentThumbnail) : ''
+        };
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        })
+          .then(function(res) { return res.json(); })
+          .then(function(result) {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            document.body.classList.add('loaded');
+            if (result && result.status === 'success') {
+              alert(dictionary[currentLang].alertSuccess);
+              document.getElementById('portfolioForm').reset();
+              document.getElementById('submitBtn').disabled = true;
+              resetDropzone();
+              switchPage('gallery');
+              fetchPortfolios();
+            } else {
+              const errMsg = (result && (result.message || result.error)) || JSON.stringify(result);
+              alert('Error: ' + errMsg);
+            }
+          })
+          .catch(function(err) {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            document.body.classList.add('loaded');
+            console.error(err);
+            alert(dictionary[currentLang].alertErrNetwork);
+          });
+      };
+      fileReader.readAsDataURL(file);
+    }
+
+    // NOTE: Event listeners for form inputs are initialized in the main DOMContentLoaded block above.
+
+    // MODAL DIALOG CONTROLLER & RENDERER
+    function launchDetailedProfileModal(item) {
+      const prefix = item.prefix || '';
+      const fname = item.firstname || '';
+      const lname = item.lastname || '';
+      const nname = item.nickname ? ` (${item.nickname})` : '';
+      
+      document.getElementById('md-name').innerText = `${prefix}${fname} ${lname}${nname}`.trim() || 'ไม่ระบุชื่อ';
+      // รองรับทั้ง key เก่า (year/class) และ key ใหม่
+      const classVal = item.year || item.class || '-';
+      document.getElementById('md-class').innerText = dictionary[currentLang].mdClassPrefix + classVal;
+      // รองรับทั้ง track และ program
+      document.getElementById('md-program').innerText = item.track || item.program || '-';
+      document.getElementById('md-round').innerText = item.round || '-';
+      document.getElementById('md-faculty').innerText = item.faculty || '-';
+      document.getElementById('md-major').innerText = item.major || '-';
+      // รองรับทั้ง univ และ university
+      document.getElementById('md-university').innerText = item.univ || item.university || '-';
+      // รองรับทั้ง message และ bio
+      document.getElementById('md-bio').innerText = item.message || item.bio || '-';
+
+      const socialBox = document.getElementById('modalSocialSection');
+      socialBox.innerHTML = '';
+      let hasSocial = false;
+
+      if (item.facebook) {
+        socialBox.innerHTML += `<a href="${item.facebook}" target="_blank" class="modal-social-btn fb"><i class="fab fa-facebook-f"></i> Facebook</a>`;
+        hasSocial = true;
+      }
+      if (item.instagram) {
+        socialBox.innerHTML += `<a href="${item.instagram}" target="_blank" class="modal-social-btn ig"><i class="fab fa-instagram"></i> Instagram</a>`;
+        hasSocial = true;
+      }
+      socialBox.style.display = hasSocial ? 'flex' : 'none';
+      const portfolioLink = item.link || item.pdfurl || item.fileurl || '';
+      const actionBtn = document.getElementById('modalActionLink');
+      if (portfolioLink) {
+        actionBtn.href = portfolioLink;
+        actionBtn.target = '_blank';
+        actionBtn.rel = 'noopener noreferrer';
+        actionBtn.style.opacity = '1';
+        actionBtn.style.pointerEvents = 'auto';
+      } else {
+        actionBtn.href = '#';
+        actionBtn.removeAttribute('target');
+        actionBtn.style.opacity = '0.4';
+        actionBtn.style.pointerEvents = 'none';
+      }
+
+      // thumbnail ใน modal (ถ้ามี)
+      const modalThumb = document.getElementById('md-thumbnail');
+      if (modalThumb) {
+        const _mt = String(item.thumbnail || '').trim();
+        const _mf = 'https://images.unsplash.com/photo-1626908013351-800ddd734b8a?w=480&q=80';
+        if (_mt.startsWith('http')) {
+          modalThumb.src = _mt;
+        } else if (_mt.startsWith('data:')) {
+          modalThumb.src = _mt;
+        } else if (_mt.length > 100) {
+          modalThumb.src = 'data:image/jpeg;base64,' + _mt;
+        } else {
+          modalThumb.src = _mf;
+        }
+      }
+      
+      toggleModal(true);
+    }
+
+    function toggleModal(show) {
+      const m = document.getElementById('profileModal');
+      if (show) m.classList.add('open');
+      else m.classList.remove('open');
+    }
+
+    function closeModalGate(e) {
+      if (e.target.id === 'profileModal') toggleModal(false);
+    }
+
+    // MULTI-LANGUAGE TRANSLATION SYSTEM ENGINE
+    function switchLanguage() {
+      currentLang = currentLang === 'th' ? 'en' : 'th';
+      document.getElementById('langBtn').innerText = currentLang === 'th' ? 'EN' : 'TH';
+      
+      document.getElementById('txt-title').innerText = dictionary[currentLang].title;
+      document.getElementById('txt-subtitle').innerText = dictionary[currentLang].subtitle;
+      document.getElementById('lbl-nav-gallery').innerText = dictionary[currentLang].navGallery;
+      document.getElementById('lbl-nav-share').innerText = dictionary[currentLang].navShare;
+      document.getElementById('hero-title').innerText = dictionary[currentLang].heroTitle;
+      document.getElementById('hero-subtitle').innerText = dictionary[currentLang].heroSubtitle;
+      document.getElementById('gallerySearch').placeholder = dictionary[currentLang].searchPlaceholder;
+      
+      document.getElementById('form-title').innerText = dictionary[currentLang].formTitle;
+      document.getElementById('form-desc').innerText = dictionary[currentLang].formDesc;
+      document.getElementById('step-lbl-1').innerText = dictionary[currentLang].step1;
+      document.getElementById('step-lbl-2').innerText = dictionary[currentLang].step2;
+      document.getElementById('step-lbl-3').innerText = dictionary[currentLang].step3;
+      document.getElementById('step-lbl-4').innerText = dictionary[currentLang].step4;
+      
+      document.getElementById('lbl-prefix').innerHTML = dictionary[currentLang].lblPrefix + '<span class="req">*</span>';
+      document.getElementById('lbl-firstname').innerHTML = dictionary[currentLang].lblFirstname + '<span class="req">*</span>';
+      document.getElementById('lbl-lastname').innerHTML = dictionary[currentLang].lblLastname + '<span class="req">*</span>';
+      document.getElementById('lbl-nickname').innerHTML = dictionary[currentLang].lblNickname + '<span class="req">*</span>';
+      document.getElementById('lbl-class').innerHTML = dictionary[currentLang].lblClass + '<span class="req">*</span>';
+      document.getElementById('lbl-program').innerHTML = dictionary[currentLang].lblProgram + '<span class="req">*</span>';
+      document.getElementById('lbl-round').innerHTML = dictionary[currentLang].lblRound + '<span class="req">*</span>';
+      document.getElementById('lbl-input-faculty').innerHTML = dictionary[currentLang].lblFaculty + '<span class="req">*</span>';
+      document.getElementById('lbl-input-major').innerHTML = dictionary[currentLang].lblMajor + '<span class="req">*</span>';
+      document.getElementById('lbl-input-uni').innerHTML = dictionary[currentLang].lblUni + '<span class="req">*</span>';
+      document.getElementById('lbl-input-file').innerHTML = dictionary[currentLang].lblFile + '<span class="req">*</span>';
+      
+      document.getElementById('txt-drop-title').innerText = dictionary[currentLang].dropTitle;
+      document.getElementById('txt-drop-subtitle').innerText = dictionary[currentLang].dropSubtitle;
+      document.getElementById('fb-ig-cond').innerText = dictionary[currentLang].condLabel;
+      document.getElementById('lbl-fb').innerHTML = dictionary[currentLang].lblFb + ` <span id="fb-ig-cond" style="color:var(--primary-blue); font-size:0.75rem;">${dictionary[currentLang].condLabel}</span>`;
+      document.getElementById('lbl-ig').innerText = dictionary[currentLang].lblIg;
+      document.getElementById('lbl-bio').innerText = dictionary[currentLang].lblBio;
+      document.getElementById('lbl-policy').innerText = dictionary[currentLang].policy;
+      document.getElementById('lbl-submit-btn').innerText = dictionary[currentLang].submitBtn;
+      
+      document.getElementById('md-lbl-program').innerText = dictionary[currentLang].mdLblProgram;
+      document.getElementById('md-lbl-round').innerText = dictionary[currentLang].mdLblRound;
+      document.getElementById('md-lbl-fac').innerText = dictionary[currentLang].mdLblFac;
+      document.getElementById('md-lbl-maj').innerText = dictionary[currentLang].mdLblMaj;
+      document.getElementById('md-lbl-uni').innerText = dictionary[currentLang].mdLblUni;
+      document.getElementById('md-lbl-bio').innerText = dictionary[currentLang].mdLblBio;
+      document.getElementById('md-btn-txt').innerText = dictionary[currentLang].mdBtnTxt;
+
+      document.getElementById('f-main-title').innerText = dictionary[currentLang].fMainTitle;
+      document.getElementById('f-addr-title').innerText = dictionary[currentLang].fAddrTitle;
+      document.getElementById('f-addr-detail').innerText = dictionary[currentLang].fAddrDetail;
+      document.getElementById('f-links-title').innerText = dictionary[currentLang].fLinksTitle;
+      document.getElementById('f-link-web').innerHTML = dictionary[currentLang].fLinkWeb;
+
+      renderGalleryGrid(localRepository);
+      filterPortfolios();
+    }
+  </script>
+</body>
+</html>
